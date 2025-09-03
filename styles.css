@@ -142,7 +142,7 @@ a {
 	place-items: center;
 	background: 
 		linear-gradient(rgba(255, 247, 237, 0), rgba(255, 247, 237, 0.06)),
-		url('../img/LAPTOP.jpg') center/cover no-repeat;
+		url('img/LAPTOP.jpg') center/cover no-repeat;
 	border-bottom: 1px solid var(--border-light);
 }
 
@@ -1190,5 +1190,6 @@ input:focus, textarea:focus {
 		padding: 1.5rem;
 	}
 }
+
 
 
