@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	setupSlider();
 	setupBackToTop();
 	setupFormValidation();
-	setupImageModal();
+		setupImageModal();
+		setupSmoothScroll();
 
 	// Carousel logic for all carousels
 	document.querySelectorAll('.carousel').forEach(carousel => {
@@ -37,6 +38,36 @@ function setCurrentYear() {
 	if (yearEl) {
 		yearEl.textContent = new Date().getFullYear();
 	}
+}
+
+// Smooth scrolling handler that accounts for the sticky header height
+function setupSmoothScroll() {
+	// Only handle same-page anchor links
+	document.querySelectorAll('a[href^="#"]').forEach(link => {
+		link.addEventListener('click', function(e) {
+			const href = this.getAttribute('href');
+			if (!href || href === '#') return;
+			const target = document.querySelector(href);
+			if (!target) return;
+
+			// Prevent default jump
+			e.preventDefault();
+
+			// Calculate offset so the section clears the sticky header
+			const header = document.querySelector('.site-header');
+			const headerHeight = header ? header.offsetHeight : 0;
+			const extraOffset = 12; // small breathing room
+			const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - extraOffset;
+
+			window.scrollTo({ top, behavior: 'smooth' });
+
+			// Move focus for accessibility after scrolling
+			setTimeout(() => {
+				target.setAttribute('tabindex', '-1');
+				target.focus({ preventScroll: true });
+			}, 500);
+		});
+	});
 }
 
 function setupHireMeAlert() {

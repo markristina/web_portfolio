@@ -18,6 +18,13 @@ html, body {
 	height: 100%;
 }
 
+/* Smooth scrolling for in-page navigation */
+html {
+	scroll-behavior: smooth;
+	/* When using a sticky header, ensure the target is offset visually */
+	scroll-padding-top: 84px; /* adjust if your header height differs */
+}
+
 body {
 	margin: 0;
 	font-family: 'Poppins', sans-serif;
