@@ -113,23 +113,75 @@ function setupBackToTop() {
 function setupFormValidation() {
 	const form = document.getElementById('contactForm');
 	if (!form) return;
+	const submitBtn = document.getElementById('contactSubmit');
+	const successEl = document.getElementById('formSuccess');
+
 	form.addEventListener('submit', (e) => {
 		e.preventDefault();
+		clearErrors(form);
+
 		const nameInput = form.querySelector('#name');
 		const emailInput = form.querySelector('#email');
 		const messageInput = form.querySelector('#message');
 
+		let firstInvalid = null;
 		let hasError = false;
 
-		hasError = validateRequired(nameInput, 'Please enter your name.') || hasError;
-		hasError = validateRequired(emailInput, 'Please enter your email.') || hasError;
-		hasError = validateRequired(messageInput, 'Please enter a message.') || hasError;
+		if (!nameInput.value.trim()) {
+			showError(nameInput, 'Please enter your name.');
+			firstInvalid = firstInvalid || nameInput;
+			hasError = true;
+		}
 
-		if (!hasError) {
-			alert('Thank you! Your message has been sent.');
+		if (!emailInput.value.trim()) {
+			showError(emailInput, 'Please enter your email.');
+			firstInvalid = firstInvalid || emailInput;
+			hasError = true;
+		} else if (!validateEmail(emailInput.value)) {
+			showError(emailInput, 'Please enter a valid email address.');
+			firstInvalid = firstInvalid || emailInput;
+			hasError = true;
+		}
+
+		if (!messageInput.value.trim()) {
+			showError(messageInput, 'Please enter a message.');
+			firstInvalid = firstInvalid || messageInput;
+			hasError = true;
+		}
+
+		if (hasError) {
+			if (firstInvalid) firstInvalid.focus();
+			return;
+		}
+
+		// Simulate sending: disable button and show ephemeral success message
+		if (submitBtn) {
+			submitBtn.disabled = true;
+			submitBtn.setAttribute('aria-busy', 'true');
+			var originalText = submitBtn.textContent;
+			submitBtn.textContent = 'Sending...';
+		}
+
+		setTimeout(() => {
+			// show success message
+			if (successEl) {
+				successEl.hidden = false;
+				successEl.classList.add('visible');
+				setTimeout(() => {
+					successEl.classList.remove('visible');
+					successEl.hidden = true;
+				}, 4000);
+			}
+
 			form.reset();
 			clearErrors(form);
-		}
+
+			if (submitBtn) {
+				submitBtn.disabled = false;
+				submitBtn.removeAttribute('aria-busy');
+				submitBtn.textContent = originalText;
+			}
+		}, 900);
 	});
 
 	['input', 'blur'].forEach((evt) => {
@@ -137,10 +189,52 @@ function setupFormValidation() {
 			const target = e.target;
 			if (!(target instanceof HTMLElement)) return;
 			if (target.matches('#name, #email, #message')) {
-				validateRequired(target, 'This field is required.');
+				validateField(target);
 			}
 		});
 	});
+
+	function validateField(input) {
+		if (input.id === 'email') {
+			if (!input.value.trim()) {
+				showError(input, 'This field is required.');
+				return true;
+			}
+			if (!validateEmail(input.value)) {
+				showError(input, 'Enter a valid email.');
+				return true;
+			}
+			showError(input, '');
+			return false;
+		} else {
+			return validateRequired(input, 'This field is required.');
+		}
+	}
+
+	function showError(input, message) {
+		const formGroup = input.closest('.form-group');
+		const errorEl = formGroup ? formGroup.querySelector('.error') : null;
+		if (errorEl) errorEl.textContent = message;
+		if (message) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
+	}
+
+	function validateRequired(inputEl, message) {
+		const formGroup = inputEl.closest('.form-group');
+		const errorEl = formGroup ? formGroup.querySelector('.error') : null;
+		if (!inputEl.value.trim()) {
+			if (errorEl) errorEl.textContent = message;
+			inputEl.setAttribute('aria-invalid', 'true');
+			return true;
+		} else {
+			if (errorEl) errorEl.textContent = '';
+			inputEl.removeAttribute('aria-invalid');
+			return false;
+		}
+	}
+
+	function validateEmail(email) {
+		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+	}
 }
 
 function validateRequired(inputEl, message) {
@@ -180,10 +274,43 @@ function setupImageModal() {
 	});
 
 	// Open modal when clicking on "View More" buttons
+	// Use images from the same .card as the clicked button to avoid brittle selectors
 	document.querySelectorAll('.view-more-btn').forEach(btn => {
-		btn.addEventListener('click', function() {
-			const projectType = this.getAttribute('data-project');
-			openProjectModal(projectType);
+		btn.addEventListener('click', function(e) {
+			// If this element is an anchor (<a>) and does NOT have a data-project attribute,
+			// allow the link to proceed (this is used for external Visit Site links).
+			const isAnchor = this.tagName && this.tagName.toLowerCase() === 'a';
+			const hasProject = this.dataset && this.dataset.project;
+			if (isAnchor && !hasProject) {
+				// Let the anchor perform its default navigation (e.g. open external site)
+				return;
+			}
+
+			// Otherwise, intercept the click to open the modal (buttons or anchors with data-project)
+			if (e && typeof e.preventDefault === 'function') e.preventDefault();
+			const card = this.closest('.card');
+			if (!card) return;
+
+			// Prefer carousel images if present, otherwise any img in the card
+			const carousel = card.querySelector('.carousel');
+			if (carousel) {
+				currentImages = Array.from(carousel.querySelectorAll('img')).map(img => ({ src: img.src, alt: img.alt }));
+				currentIndex = 0;
+			} else {
+				const imgs = Array.from(card.querySelectorAll('img'));
+				if (imgs.length > 0) {
+					currentImages = imgs.map(img => ({ src: img.src, alt: img.alt }));
+					currentIndex = 0;
+				} else {
+					currentImages = [];
+					currentIndex = 0;
+				}
+			}
+
+			if (currentImages.length === 0) return;
+			updateModalImage();
+			modal.style.display = 'block';
+			document.body.style.overflow = 'hidden';
 		});
 	});
 
@@ -275,50 +402,8 @@ function setupImageModal() {
 		}
 	}
 
-	function openProjectModal(projectType) {
-		switch(projectType) {
-			case 'graphic-design':
-				// For Graphic Design, use the carousel images
-				const graphicCard = document.querySelector('.card:has(.carousel)');
-				if (graphicCard) {
-					const carouselImages = Array.from(graphicCard.querySelectorAll('.carousel-images img')).map(img => ({
-						src: img.src,
-						alt: img.alt
-					}));
-					currentImages = carouselImages;
-					currentIndex = 0;
-				}
-				break;
-			case 'application-design':
-				// For Application Design, use the single image
-				const appCard = document.querySelector('.card:has(img[src*="unsplash.com/photo-1512941937669"])');
-				if (appCard) {
-					const img = appCard.querySelector('img');
-					currentImages = [{
-						src: img.src,
-						alt: img.alt
-					}];
-					currentIndex = 0;
-				}
-				break;
-			case 'web-development':
-				// For Web Development, use the single image
-				const webCard = document.querySelector('.card:has(img[src*="unsplash.com/photo-1467232004584"])');
-				if (webCard) {
-					const img = webCard.querySelector('img');
-					currentImages = [{
-						src: img.src,
-						alt: img.alt
-					}];
-					currentIndex = 0;
-				}
-				break;
-		}
-
-		updateModalImage();
-		modal.style.display = 'block';
-		document.body.style.overflow = 'hidden';
-	}
+	// The modal now derives images relative to the clicked element's card (see openModal and view-more handler).
+	// The previous project-specific helper that used fragile selectors was removed to avoid maintenance issues.
 }
 
 
