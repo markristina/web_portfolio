@@ -294,7 +294,7 @@ function setupImageModal() {
 	const closeBtn = document.querySelector('.close-modal');
 	const prevBtn = document.querySelector('.modal-prev');
 	const nextBtn = document.querySelector('.modal-next');
-	
+
 	let currentImages = [];
 	let currentIndex = 0;
 
@@ -383,8 +383,8 @@ function setupImageModal() {
 	function openModal(src, alt) {
 		// Get all images from the same project card
 		const clickedImg = document.querySelector(`img[src="${src}"]`);
-		const projectCard = clickedImg.closest('.card');
-		
+		const projectCard = clickedImg ? clickedImg.closest('.card') : null;
+
 		if (projectCard) {
 			// If it's a carousel, get all carousel images
 			const carousel = projectCard.querySelector('.carousel');
@@ -425,7 +425,7 @@ function setupImageModal() {
 		if (currentImages.length > 0) {
 			modalImg.src = currentImages[currentIndex].src;
 			modalImg.alt = currentImages[currentIndex].alt;
-			
+
 			// Show/hide navigation buttons based on number of images
 			const navButtons = document.querySelectorAll('.modal-prev, .modal-next');
 			navButtons.forEach(btn => {
@@ -433,9 +433,6 @@ function setupImageModal() {
 			});
 		}
 	}
-
-	// The modal now derives images relative to the clicked element's card (see openModal and view-more handler).
-	// The previous project-specific helper that used fragile selectors was removed to avoid maintenance issues.
 }
 
 // Skill Progress Bar Animation
