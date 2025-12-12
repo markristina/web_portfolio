@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	setupFormValidation();
 		setupImageModal();
 		setupSmoothScroll();
+		setupSkillAnimations();
 
 	// Carousel logic for all carousels
 	document.querySelectorAll('.carousel').forEach(carousel => {
@@ -435,6 +436,57 @@ function setupImageModal() {
 
 	// The modal now derives images relative to the clicked element's card (see openModal and view-more handler).
 	// The previous project-specific helper that used fragile selectors was removed to avoid maintenance issues.
+}
+
+// Skill Progress Bar Animation
+function setupSkillAnimations() {
+	const skillBars = document.querySelectorAll('.skill-progress');
+	const skillsSection = document.getElementById('skills');
+	
+	if (!skillBars.length || !skillsSection) return;
+
+	// Create Intersection Observer to trigger animations when skills section is visible
+	const observer = new IntersectionObserver((entries) => {
+		entries.forEach(entry => {
+			if (entry.isIntersecting) {
+				// Animate all skill bars in the visible section
+				skillBars.forEach(bar => {
+					const progress = bar.getAttribute('data-progress');
+					if (progress) {
+						// Set the width after a small delay for smooth animation
+						setTimeout(() => {
+							bar.style.width = progress + '%';
+						}, 200);
+					}
+				});
+				// Stop observing after animation is triggered
+				observer.unobserve(entry.target);
+			}
+		});
+	}, {
+		threshold: 0.3, // Trigger when 30% of the section is visible
+		rootMargin: '0px 0px -100px 0px' // Start animation a bit before fully in view
+	});
+
+	observer.observe(skillsSection);
+
+	// Add hover effects for skill items
+	const skillItems = document.querySelectorAll('.skill-item');
+	skillItems.forEach(item => {
+		item.addEventListener('mouseenter', function() {
+			const progressBar = this.querySelector('.skill-progress');
+			if (progressBar) {
+				progressBar.style.filter = 'brightness(1.1)';
+			}
+		});
+
+		item.addEventListener('mouseleave', function() {
+			const progressBar = this.querySelector('.skill-progress');
+			if (progressBar) {
+				progressBar.style.filter = 'brightness(1)';
+			}
+		});
+	});
 }
 
 
