@@ -1253,7 +1253,8 @@ input:focus, textarea:focus {
 	color: var(--text);
 	text-decoration: none;
 	transition: all 0.3s ease;
-	min-width: 100px;
+	width: 140px;
+	height: 110px;
 	box-shadow: 0 4px 16px rgba(var(--shadow-rgb), 0.12);
 }
 
