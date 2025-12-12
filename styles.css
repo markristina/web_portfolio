@@ -1245,16 +1245,16 @@ input:focus, textarea:focus {
 	flex-direction: column;
 	align-items: center;
 	gap: 0.5rem;
-	padding: 1.5rem;
+	padding: 1.2rem 1.4rem;
 	background: rgba(255, 255, 255, 0.8);
 	backdrop-filter: blur(10px);
-	border-radius: 16px;
+	border-radius: 18px;
 	border: 1px solid rgba(var(--shadow-rgb), 0.12);
 	color: var(--text);
 	text-decoration: none;
 	transition: all 0.3s ease;
-	width: 140px;
-	height: 110px;
+	width: 132px;
+	height: 112px;
 	box-shadow: 0 4px 16px rgba(var(--shadow-rgb), 0.12);
 }
 
