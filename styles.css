@@ -1393,6 +1393,7 @@ input:focus, textarea:focus {
 	pointer-events: none;
 	transform: translateY(8px);
 	transition: opacity 180ms ease, transform 180ms ease;
+	z-index: 990;
 }
 
 .back-to-top.show {
@@ -1582,11 +1583,16 @@ input:focus, textarea:focus {
 		top: 64px;
 		right: 1rem;
 		background: var(--cream);
+		color: var(--burgundy);
 		border: 1px solid var(--border-light);
 		border-radius: 12px;
 		padding: 0.5rem;
 		box-shadow: 0 10px 24px rgba(var(--shadow-rgb), 0.16);
 		z-index: 30;
+	}
+	.nav-links a {
+		color: var(--burgundy);
+		font-weight: 600;
 	}
 	.navbar.open .nav-links {
 		display: flex;
