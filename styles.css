@@ -28,7 +28,7 @@ html {
 body {
 	margin: 0;
 	font-family: 'Poppins', sans-serif;
-	color: var(--text);
+	color: #432323;
 	background: var(--cream);
 	line-height: 1.6;
 }
@@ -188,6 +188,17 @@ a {
     font-size: 3rem;
     line-height: 1.1;
     color: var(--burgundy);
+}
+.hero-title .char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: transform 600ms cubic-bezier(.2,.9,.2,1), opacity 600ms ease;
+    transition-delay: calc(var(--d) * 60ms);
+}
+.hero-title.animate .char {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .hero-description {
@@ -629,7 +640,51 @@ a {
 
 .projects h2 {
 	text-align: center;
-	margin-bottom: 1.5rem;
+	margin: 0 0 1.5rem;
+	font-size: 3rem;
+	background: linear-gradient(135deg, var(--burgundy-dark) 0%, var(--burgundy) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	color: transparent;
+	display: block;
+	width: 100%;
+	position: relative;
+}
+.projects h1 {
+	text-align: center;
+	margin: 0 0 1.5rem;
+	font-size: 3rem;
+	background: linear-gradient(135deg, var(--burgundy-dark) 0%, var(--burgundy) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	color: transparent;
+	display: block;
+	width: 100%;
+	position: relative;
+}
+.projects h2::after {
+	content: '';
+	position: absolute;
+	bottom: -10px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80px;
+	height: 4px;
+	background: linear-gradient(90deg, var(--burgundy-dark), var(--burgundy));
+	border-radius: 2px;
+}
+.projects h1::after {
+	content: '';
+	position: absolute;
+	bottom: -10px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80px;
+	height: 4px;
+	background: linear-gradient(90deg, var(--burgundy-dark), var(--burgundy));
+	border-radius: 2px;
 }
 
 
@@ -637,13 +692,16 @@ a {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 	gap: 1.5rem;
+	text-align: left;
 }
 
 .card {
 	background: var(--cream-2);
 	border-radius: 14px;
 	overflow: hidden;
-	box-shadow: 0 12px 28px rgba(var(--shadow-rgb), 0.06);
+	box-shadow: 
+		0 10px 24px rgba(var(--shadow-rgb), 0.15),
+		0 2px 8px rgba(var(--shadow-rgb), 0.10);
 	transition: transform 240ms cubic-bezier(.2,.9,.2,1), box-shadow 240ms ease;
 	display: flex;
 	flex-direction: column;
@@ -651,7 +709,9 @@ a {
 
 .card:hover {
 	transform: translateY(-6px);
-	box-shadow: 0 20px 40px rgba(var(--shadow-rgb), 0.10);
+	box-shadow: 
+		0 18px 40px rgba(var(--shadow-rgb), 0.22),
+		0 8px 20px rgba(var(--shadow-rgb), 0.16);
 }
 
 .card img {
@@ -662,27 +722,27 @@ a {
 }
 
 .card-body {
-	padding: 1.6rem 1.25rem;
+	padding: 1.4rem 1.25rem;
 	display: flex;
 	flex-direction: column;
 	gap: 0.9rem;
 	flex: 1 1 auto;
 	align-items: flex-start;
-	/* Ensure content and CTA are spaced so CTAs align across cards */
 	justify-content: space-between;
+	text-align: left;
 }
 
 .card-body h3 {
-	margin: 0;
+	margin: 0 0 0.3rem;
 	font-size: 1.5rem;
-	line-height: 1.05;
+	line-height: 1.1;
 	color: var(--text);
 	font-weight: 700;
 }
 
 .card-body p {
-	margin: 0;
-	color: rgba(15,23,42,0.8);
+	margin: 0 0 0.5rem;
+	color: rgba(15,23,42,0.86);
 	line-height: 1.6;
 	font-size: 0.98rem;
 }
@@ -690,10 +750,10 @@ a {
 /* Meta lines like Tools/Problem/Solution inside card body */
 
 .card-body .meta {
-	margin: 0.15rem 0;
+	margin: 0.25rem 0;
 	color: rgba(15,23,42,0.88);
 	font-size: 0.95rem;
-	line-height: 1.45;
+	line-height: 1.5;
 	display: block;
 }
 
@@ -1124,6 +1184,23 @@ a {
 .contact h2 {
 	text-align: center;
 	margin-bottom: 1.5rem;
+	font-size: 3rem;
+	background: linear-gradient(135deg, var(--burgundy-dark) 0%, var(--burgundy) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	position: relative;
+}
+.contact h2::after {
+	content: '';
+	position: absolute;
+	bottom: -10px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80px;
+	height: 4px;
+	background: linear-gradient(90deg, var(--burgundy-dark), var(--burgundy));
+	border-radius: 2px;
 }
 
 form {
@@ -1208,102 +1285,7 @@ input:focus, textarea:focus {
 }
 
 /* Social Links */
-.social-links {
-	text-align: center;
-	max-width: 680px;
-	margin: 0 auto;
-}
-
-.social-links h3 {
-	margin-bottom: 2rem;
-	color: var(--text);
-	font-size: 1.5rem;
-	position: relative;
-}
-
-.social-links h3::after {
-	content: '';
-	position: absolute;
-	bottom: -8px;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 60px;
-	height: 3px;
-	background: linear-gradient(90deg, var(--burgundy-dark), var(--burgundy));
-	border-radius: 2px;
-}
-
-.social-icons {
-	display: flex;
-	justify-content: center;
-	gap: 1.5rem;
-	flex-wrap: wrap;
-}
-
-.social-icon {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 0.5rem;
-	padding: 1.2rem 1.4rem;
-	background: rgba(255, 255, 255, 0.8);
-	backdrop-filter: blur(10px);
-	border-radius: 18px;
-	border: 1px solid rgba(var(--shadow-rgb), 0.12);
-	color: var(--text);
-	text-decoration: none;
-	transition: all 0.3s ease;
-	width: 132px;
-	height: 112px;
-	box-shadow: 0 4px 16px rgba(var(--shadow-rgb), 0.12);
-}
-
-.social-icon:hover {
-	transform: translateY(-5px);
-	box-shadow: 0 8px 25px rgba(var(--shadow-rgb), 0.22);
-	border-color: rgba(var(--shadow-rgb), 0.28);
-}
-
-.social-icon svg {
-	width: 32px;
-	height: 32px;
-	transition: transform 0.3s ease;
-}
-
-.social-icon:hover svg {
-	transform: scale(1.1);
-}
-
-.social-icon span {
-	font-weight: 600;
-	font-size: 0.9rem;
-	letter-spacing: 0.5px;
-}
-
-/* Social Icon Colors */
-.social-icon.instagram:hover {
-	background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-	color: white;
-	border-color: transparent;
-}
-
-.social-icon.gmail:hover {
-	background: linear-gradient(45deg, #ea4335, #d93025);
-	color: white;
-	border-color: transparent;
-}
-
-.social-icon.whatsapp:hover {
-	background: linear-gradient(45deg, #25d366, #128c7e);
-	color: white;
-	border-color: transparent;
-}
-
-.social-icon.github:hover {
-	background: linear-gradient(45deg, #333, #24292e);
-	color: white;
-	border-color: transparent;
-}
+/* Contact social links removed (duplicated in footer) */
 
 /* Footer */
 .site-footer {
@@ -1312,6 +1294,87 @@ input:focus, textarea:focus {
 	background: var(--burgundy);
 	text-align: center;
 	color: var(--cream);
+}
+
+.site-footer .social-icons {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	gap: 0.75rem;
+}
+
+.site-footer .hero-social-icon {
+	background: #000000;
+	color: #ffffff;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.site-footer a {
+	color: var(--cream);
+	opacity: 0.9;
+}
+
+.site-footer a:hover {
+	opacity: 1;
+}
+
+.footer-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 2rem;
+	align-items: start;
+	text-align: left;
+	padding: 0.5rem 0 1rem;
+}
+
+.footer-brand p {
+	margin: 0.75rem 0 0;
+	opacity: 0.9;
+	font-size: 0.95rem;
+}
+
+.footer-column-title {
+	font-weight: 700;
+	margin-bottom: 0.75rem;
+}
+
+.footer-links {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.5rem;
+}
+
+.footer-links a {
+	display: inline-block;
+	padding: 0.25rem 0;
+	border-radius: 6px;
+	position: relative;
+}
+
+.footer-links a::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: -2px;
+	width: 0;
+	height: 2px;
+	background: currentColor;
+	border-radius: 2px;
+	transition: width 220ms ease;
+}
+
+.footer-links a.clicked::after,
+.footer-links a:focus-visible::after {
+	width: 100%;
+}
+
+.footer-bottom {
+	margin-top: 0.5rem;
+	padding-top: 0.75rem;
+	border-top: 1px solid rgba(255,255,255,0.12);
+	text-align: center;
 }
 
 /* Back to top */
@@ -1468,6 +1531,15 @@ input:focus, textarea:focus {
 	.hero h1 {
 		font-size: 2.5rem;
 	}
+	.projects h2 {
+		font-size: 2.5rem;
+	}
+	.projects h1 {
+		font-size: 2.5rem;
+	}
+	.contact h2 {
+		font-size: 2.5rem;
+	}
 	.hero-grid {
 		grid-template-columns: 1fr;
 		gap: 2rem;
@@ -1556,6 +1628,15 @@ input:focus, textarea:focus {
 		gap: 3rem;
 	}
 	.about-header h2 {
+		font-size: 2.2rem;
+	}
+	.projects h2 {
+		font-size: 2.2rem;
+	}
+	.projects h1 {
+		font-size: 2.2rem;
+	}
+	.contact h2 {
 		font-size: 2.2rem;
 	}
 	.about-intro h3 {
